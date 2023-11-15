@@ -4,7 +4,6 @@ from pydantic import Field
 from pydantic import BaseConfig
 from bson.objectid import ObjectId
 import utils
-import time
 
 
 class MongoModel(BaseModel):

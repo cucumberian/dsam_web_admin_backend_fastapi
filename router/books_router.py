@@ -1,11 +1,9 @@
 from fastapi import APIRouter
-from fastapi import Depends
 from fastapi import Query
 from fastapi import Body
 
 from database import pydantic_models
 from controllers import BooksController
-import controllers.auth_controller as AuthController
 
 books_router = APIRouter()
 
