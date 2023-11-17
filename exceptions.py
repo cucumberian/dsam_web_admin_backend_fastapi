@@ -18,3 +18,8 @@ TOKEN_EXPIRED_EXCEPTION = HTTPException(
     detail="Token expired",
     headers={"WWW-Authentication": "bearer"},
 )
+
+BOOK_NOT_FOUND_EXCEPTION = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail="Book not found",
+)

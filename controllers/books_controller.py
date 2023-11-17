@@ -1,20 +1,25 @@
-from fastapi import Depends
-
-from database import pydantic_models
+import random
+from models import book_model
 from database import crud
-
-from . import auth_controller
+import exceptions
 
 
 class BooksController:
     @staticmethod
-    def get_books(limit: int) -> list[pydantic_models.Book]:
+    def get_books(limit: int) -> list[book_model.Book]:
         books = crud.get_books(limit)
         return books
 
     @staticmethod
-    def create_new_book(
-        book: pydantic_models.BookToPost,
-        user=Depends(auth_controller.get_current_admin),
-    ):
-        return crud.create_book(book)
+    def add_book(book: book_model.Book) -> book_model.Book:
+        # book id generation in case user has send it
+        book.id = f"{random.getrandbits(256):x}"
+        new_book = crud.add_book(book)
+        return new_book
+
+    @staticmethod
+    def delete_book(book_id: str) -> str:
+        deleted_count = crud.delete_book(book_id)
+        if deleted_count == 0:
+            raise exceptions.BOOK_NOT_FOUND_EXCEPTION 
+        return deleted_count

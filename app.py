@@ -5,11 +5,10 @@ import uvicorn
 from config import Config
 from router import index_router
 
-api = FastAPI()
-origins = ["*"]
-api.add_middleware(
+app = FastAPI()
+app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -17,14 +16,14 @@ api.add_middleware(
 
 API_URL = f"/api/{Config.api_version}"
 
-api.include_router(
+app.include_router(
     prefix=API_URL,
     router=index_router,
 )
 
 
 def main():
-    uvicorn.run(app="app:api", host="127.0.0.1", port=8002, reload=True)
+    uvicorn.run(app="app:app", host="127.0.0.1", port=8000, reload=True)
 
 
 if __name__ == "__main__":
