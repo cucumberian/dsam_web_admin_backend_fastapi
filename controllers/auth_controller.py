@@ -103,7 +103,7 @@ def get_user(username: str) -> pydantic_models.User | None:
     return None
 
 
-async def get_current_user(
+def get_current_user(
     token: str = Depends(oauth2_scheme)
 ) -> pydantic_models.User | None:
     """Возвращает по токену пользователя, если токен валиден.
@@ -151,3 +151,5 @@ def get_current_admin(
     if user.has_role("admin"):
         return user
     raise exceptions.FORBIDDEN_EXCEPTION
+
+    

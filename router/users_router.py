@@ -1,27 +1,32 @@
 from fastapi import APIRouter
-from fastapi import Depends
-from fastapi import Body
-import controllers.auth_controller as AuthController
+
 from controllers.users_controller import UserController
-from database import pydantic_models
+from models.user_model import User
+from models.user_model import UserRegister
+from models import response_model
 
 users_router = APIRouter()
 
 
-@users_router.get("/")
+@users_router.get("/", response_model=response_model.BaseResponse)
 def get_users():
-    users: list[pydantic_models.User] = UserController.get_users()
-    return users
+    try:
+        users: list[User] = UserController.get_users()
+        return response_model.Response200(
+            data=users, message="Список пользователей"
+        )
+    except Exception as e:
+        return response_model.ErrorResponse(status_code=500, message=str(e))
 
 
-@users_router.post("/")
-def add_user(
-    user: pydantic_models.UserToPost = Body(),
-):
-    print(f"router add {user = }")
-    user = UserController.add_user(user)
-    return {
-            "id": user.id,
-            "username": user.username,
-            "role": user.role,
-        }
+@users_router.post("/", response_model=response_model.BaseResponse)
+def add_user(user_to_register: UserRegister):
+    try:
+        new_user = UserController.register_user(user=user_to_register)
+        return response_model.BaseResponse(
+            message="user added", data=User(**new_user.model_dump())
+        )
+
+    except Exception as e:
+        print(e)
+        return response_model.ErrorResponse(status_code=500, message=str(e))

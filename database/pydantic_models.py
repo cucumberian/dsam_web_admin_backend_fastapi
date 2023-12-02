@@ -2,8 +2,9 @@ from datetime import datetime
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import BaseConfig
-from json.objectid import ObjectId
-import utils
+from enum import Enum
+from bson import ObjectId
+# from json.objectid import ObjectId
 
 
 class MongoModel(BaseModel):
@@ -28,19 +29,23 @@ class TokenData(BaseModel):
 class UserToPost(BaseModel):
     username: str
     password: str
-    role: str
+    roles: list[UserRole]
+
+
+class UserRole(Enum):
+    admin = "admin"
+    user = "user"
+    manager = "manager"
 
 
 class User(MongoModel):
     id: str | None = Field(default=None, alias="_id")
     username: str = Field(...)
     password_hash: str
-    role: str
+    roles: list[UserRole] | None = Field(default=None)
 
     def verify_hash(self, password: str) -> str | None:
-        return utils.verify_password_hash(
-            password=password, password_hash=self.password_hash
-        )
+        pass
 
     def has_role(self, role: str) -> bool:
         """
@@ -50,7 +55,7 @@ class User(MongoModel):
         returns: True if user has the role, False otherwise (bool)
         raises: None
         """
-        return role == self.role
+        return role in self.role
 
 
 class BookToPost(BaseModel):

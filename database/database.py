@@ -45,9 +45,17 @@ class MongoDB:
                 print(f"\nERROR in {book}")
         return books
 
-    def __del__(self) -> None:
-        self.close()
-        print("Database connection closed.")
+    # def __del__(self) -> None:
+    # self.close()
+    # print("Database connection closed.")
 
     def close(self) -> None:
-        self.client.close()
+        # self.client.close()
+        pass
+
+    def get_users(self):
+        users = self.db["users"].find()
+        return users
+
+
+mongodb = MongoDB()

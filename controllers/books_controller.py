@@ -23,3 +23,9 @@ class BooksController:
         if deleted_count == 0:
             raise exceptions.BOOK_NOT_FOUND_EXCEPTION 
         return deleted_count
+
+# UserWarning: Pydantic serializer warnings:
+#  Expected `str` but got `ObjectId` - serialized value may not be as expected
+#  return self.__pydantic_serializer__.to_python(
+#  Как исправить?
+

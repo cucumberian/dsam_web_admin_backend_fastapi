@@ -1,8 +1,10 @@
-from database.database import db
-from pydantic_models import Book
+from database.database import mongodb
+from models.user_model import User
+from database import crud
 
+def get_users() -> list[User]:
+        users = list(mongodb.db.users.find())
+        return users
 
-books: list[Book] = [Book(**book) for book in db.get_books()]
-
-print(f"{books = }")
-# 
+users = get_users()
+print(users)
